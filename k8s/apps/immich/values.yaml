@@ -1,0 +1,68 @@
+
+image:
+  tag: v3.2.0
+
+controllers:
+  main:
+    containers:
+      main:
+        env:
+          TZ: Europe/Madrid
+
+          DB_HOSTNAME:
+            valueFrom:
+              secretKeyRef:
+                name: immich-database-immich
+                key: host
+
+          DB_USERNAME:
+            valueFrom:
+              secretKeyRef:
+                name: immich-database-immich
+                key: user
+
+          DB_PASSWORD:
+            valueFrom:
+              secretKeyRef:
+                name: immich-database-immich
+                key: password
+
+          DB_DATABASE_NAME:
+            valueFrom:
+              secretKeyRef:
+                name: immich-database-immich
+                key: dbname
+
+          DB_VECTOR_EXTENSION: vectorchord
+
+valkey:
+  enabled: true
+  persistence:
+    data:
+      enabled: false
+      type: emptyDir
+
+immich:
+  persistence:
+    library:
+      existingClaim: immich-library
+
+machine-learning:
+  enabled: true
+
+server:
+  ingress:
+    main:
+      enabled: true
+      className: traefik
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      hosts:
+        - host: immich.tech.eus
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: immich-tls
+          hosts:
+            - immich.tech.eus
