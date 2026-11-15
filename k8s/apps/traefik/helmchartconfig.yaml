@@ -10,3 +10,6 @@ spec:
       - "--entryPoints.web.transport.respondingTimeouts.idleTimeout=0s"
       - "--entryPoints.websecure.transport.respondingTimeouts.readTimeout=0s"
       - "--entryPoints.websecure.transport.respondingTimeouts.idleTimeout=0s"
+    providers:
+      kubernetesCRD:
+        allowCrossNamespace: true

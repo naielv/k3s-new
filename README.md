@@ -33,6 +33,9 @@ and a 10Gi MooseFS volume for media. Before syncing, create the `authentik`
 namespace and apply a private copy of
 [`examples/authentik-secrets.yaml`](./examples/authentik-secrets.yaml) after
 replacing both placeholder secrets. Do not commit real credentials.
+The Traefik ForwardAuth middleware is defined in
+[`traefik-middleware.yaml`](./k8s/apps/authentik/traefik-middleware.yaml) and
+used by Adminer; configure a Forward Auth provider and outpost in Authentik.
 
 ## Super
 
