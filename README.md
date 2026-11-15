@@ -57,6 +57,9 @@ host mounts.
 
 Before syncing, create the `super` namespace and apply a private copy of
 [`examples/super-app-secrets.yaml`](./examples/super-app-secrets.yaml).
+Configure the Authentik provider's redirect URI as
+`https://grafana.16w.eu/login/generic_oauth` and put its client secret in
+`GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET`.
 
 CNPG generates the `figaro-db-app` Secret after the database is ready. This
 stack is staged in Argo CD; it does not stop or remove the Compose services.
