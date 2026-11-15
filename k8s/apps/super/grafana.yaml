@@ -20,6 +20,10 @@ spec:
         - name: grafana
           image: grafana/grafana-oss:latest
           imagePullPolicy: Always
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 472
+            runAsGroup: 472
           ports:
             - name: http
               containerPort: 3000
