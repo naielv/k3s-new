@@ -13,3 +13,47 @@ out of Git and store the generated password securely. The template is in
 [`examples/couchdb-admin-secret.yaml`](./examples/couchdb-admin-secret.yaml).
 Copy it outside the repository, replace the example password, then apply that
 copy with `kubectl apply -f`. The namespace must exist first.
+
+## Prisma
+
+Prisma is deployed as a separate Argo CD application in the `prisma` namespace.
+Its frontend and backend are exposed at `prisma.16w.eu` and `napi.16w.eu`,
+respectively, through Traefik with the `crowdsec@file` middleware.
+
+Before syncing, create the `prisma-backend-secrets` Secret with the keys shown
+in [`examples/prisma-backend-secret.yaml`](./examples/prisma-backend-secret.yaml).
+Copy the template outside the repository, fill in the values, and apply that
+copy with `kubectl apply -f`. The `prisma` namespace must exist first. Do not
+commit real credentials.
+
+## Authentik
+
+Authentik is deployed at `auth.16w.eu` with its own PostgreSQL 18 CNPG cluster
+and a 10Gi MooseFS volume for media. Before syncing, create the `authentik`
+namespace and apply a private copy of
+[`examples/authentik-secrets.yaml`](./examples/authentik-secrets.yaml) after
+replacing both placeholder secrets. Do not commit real credentials.
+
+## Super
+
+The `super` stack is deployed in its own namespace. `figaro-db` is a new,
+empty PostgreSQL 17 CNPG cluster; it does not reuse or import the old Compose
+data directory. The web app and Prisma share its `16world` database. All
+persisted data uses new MooseFS PVCs rather than the old host mounts.
+
+Before syncing, create the `super` namespace, apply a private copy of
+[`examples/super-app-secrets.yaml`](./examples/super-app-secrets.yaml), and
+create `super-website-env` from the existing `super.env` file:
+
+```sh
+kubectl create secret generic super-website-env \
+  --namespace super \
+  --from-env-file=/mnt/mfs/16W/secrets/super.env
+```
+
+CNPG generates the `figaro-db-app` Secret after the database is ready. Set
+Prisma's `DATABASE_URL` in the `prisma` namespace to that generated connection
+URI, replacing its host with
+`figaro-db-rw.super.svc.cluster.local`; the Prisma example shows the expected
+format. This stack is staged in Argo CD; it does not stop or remove the Compose
+services.

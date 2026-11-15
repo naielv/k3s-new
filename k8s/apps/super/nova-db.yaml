@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nova-db
+  namespace: super
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nova-db
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nova-db
+    spec:
+      containers:
+        - name: pocketbase
+          image: ghcr.io/muchobien/pocketbase:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8090
+              protocol: TCP
+          env:
+            - name: PB_HOST
+              value: 0.0.0.0
+            - name: PB_PORT
+              value: "8090"
+            - name: PB_ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: super-app-secrets
+                  key: PB_ADMIN_EMAIL
+            - name: PB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: super-app-secrets
+                  key: PB_ADMIN_PASSWORD
+            - name: TZ
+              value: Europe/Madrid
+          volumeMounts:
+            - name: data
+              mountPath: /pb_data
+            - name: public
+              mountPath: /pb_public
+            - name: hooks
+              mountPath: /pb_hooks
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: nova-pb-data
+        - name: public
+          persistentVolumeClaim:
+            claimName: nova-pb-public
+        - name: hooks
+          persistentVolumeClaim:
+            claimName: nova-pb-hooks
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nova-db
+  namespace: super
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: nova-db
+  ports:
+    - name: http
+      port: 8090
+      targetPort: http
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nova-db
+  namespace: super
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.middlewares: crowdsec@file
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  ingressClassName: traefik
+  tls:
+    - secretName: nova-db-tls
+      hosts:
+        - pb0.16w.eu
+  rules:
+    - host: pb0.16w.eu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nova-db
+                port:
+                  name: http

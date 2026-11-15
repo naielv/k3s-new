@@ -1,0 +1,28 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: figaro-db
+  namespace: super
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.6-standard-trixie
+
+  bootstrap:
+    initdb:
+      database: "16world"
+      owner: "16world"
+      dataChecksums: true
+
+  storage:
+    storageClass: moosefs-storage
+    size: 20Gi
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 2Gi

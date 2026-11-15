@@ -1,0 +1,48 @@
+authentik:
+  secret_key: ""
+  postgresql:
+    host: authentik-db-rw.authentik.svc.cluster.local
+    port: 5432
+    name: authentik
+    user: authentik
+    password: ""
+
+postgresql:
+  enabled: false
+
+global:
+  env:
+    - name: AUTHENTIK_SECRET_KEY
+      valueFrom:
+        secretKeyRef:
+          name: authentik-secrets
+          key: AUTHENTIK_SECRET_KEY
+    - name: AUTHENTIK_POSTGRESQL__PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: authentik-secrets
+          key: password
+    - name: AUTHENTIK_POSTGRESQL__SSLMODE
+      value: require
+  volumes:
+    - name: media
+      persistentVolumeClaim:
+        claimName: authentik-media
+  volumeMounts:
+    - name: media
+      mountPath: /media
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.middlewares: crowdsec@file
+      cert-manager.io/cluster-issuer: letsencrypt-production
+    hosts:
+      - auth.16w.eu
+    tls:
+      - secretName: authentik-tls
+        hosts:
+          - auth.16w.eu

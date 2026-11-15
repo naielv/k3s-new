@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prisma-frontend
+  namespace: prisma
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prisma-frontend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: prisma-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/naielv/prisma-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prisma-frontend
+  namespace: prisma
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: prisma-frontend
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

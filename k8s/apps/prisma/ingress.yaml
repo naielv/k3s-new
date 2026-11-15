@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prisma
+  namespace: prisma
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.middlewares: crowdsec@file
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  ingressClassName: traefik
+  tls:
+    - secretName: prisma-tls
+      hosts:
+        - prisma.16w.eu
+        - napi.16w.eu
+  rules:
+    - host: prisma.16w.eu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prisma-frontend
+                port:
+                  name: http
+    - host: napi.16w.eu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prisma-backend
+                port:
+                  name: http

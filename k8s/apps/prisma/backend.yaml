@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prisma-backend
+  namespace: prisma
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prisma-backend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: prisma-backend
+    spec:
+      containers:
+        - name: backend
+          image: ghcr.io/naielv/prisma-backend:latest
+          imagePullPolicy: Always
+          args:
+            - uvicorn
+            - main:app
+            - --host
+            - 0.0.0.0
+            - --port
+            - "8000"
+            - --proxy-headers
+            - --forwarded-allow-ips
+            - "*"
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          env:
+            - name: ENVIRONMENT
+              value: production
+            - name: FRONTEND_URL
+              value: https://prisma.16w.eu
+            - name: FRONTEND_ORIGIN
+              value: https://prisma.16w.eu
+            - name: AUTHENTIK_CLIENT_ID
+              value: u1ju7iU99N0kmQ20ShrCq0ijcwAVAqowHAmZWeOf
+            - name: SESSION_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: prisma-backend-secrets
+                  key: SESSION_SECRET_KEY
+            - name: AUTHENTIK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: prisma-backend-secrets
+                  key: AUTHENTIK_CLIENT_SECRET
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: prisma-backend-secrets
+                  key: DATABASE_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prisma-backend
+  namespace: prisma
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: prisma-backend
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http
+      protocol: TCP
