@@ -57,11 +57,11 @@ server:
       annotations:
         traefik.ingress.kubernetes.io/router.entrypoints: websecure
       hosts:
-        - host: immich.tech.eus
+        - host: immich.16w.eu
           paths:
             - path: /
               pathType: Prefix
       tls:
         - secretName: immich-tls
           hosts:
-            - immich.tech.eus
+            - immich.16w.eu
