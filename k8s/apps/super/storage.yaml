@@ -26,57 +26,12 @@ spec:
   storageClassName: moosefs-storage
   resources:
     requests:
-      storage: 5Gi
+      storage: 15Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: nova-pb-hooks
-  namespace: super
-  annotations:
-    argocd.argoproj.io/sync-wave: "-2"
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: moosefs-storage
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: omni-pb-data
-  namespace: super
-  annotations:
-    argocd.argoproj.io/sync-wave: "-2"
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: moosefs-storage
-  resources:
-    requests:
-      storage: 10Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: omni-pb-public
-  namespace: super
-  annotations:
-    argocd.argoproj.io/sync-wave: "-2"
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: moosefs-storage
-  resources:
-    requests:
-      storage: 5Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: omni-pb-hooks
   namespace: super
   annotations:
     argocd.argoproj.io/sync-wave: "-2"

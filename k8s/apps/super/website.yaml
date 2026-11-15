@@ -62,7 +62,7 @@ spec:
       hosts:
         - q.16w.eu
         - 16w.eu
-        - tech.eus
+        # - tech.eus
         - w.16w.eu
   rules:
     - host: q.16w.eu
@@ -85,16 +85,16 @@ spec:
                 name: website
                 port:
                   name: http
-    - host: tech.eus
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: website
-                port:
-                  name: http
+    # - host: tech.eus
+    #   http:
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: website
+    #             port:
+    #               name: http
     - host: w.16w.eu
       http:
         paths:
