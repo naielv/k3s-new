@@ -1,10 +1,9 @@
-image:
-  tag: v3.4.1
-
 controllers:
   main:
     containers:
       main:
+        image:
+          tag: v3.4.1
         env:
           TZ: Europe/Madrid
 
