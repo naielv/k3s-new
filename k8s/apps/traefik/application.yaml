@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik-config
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/naielv/k3s-new.git
+    targetRevision: main
+    path: k8s/apps/traefik
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
