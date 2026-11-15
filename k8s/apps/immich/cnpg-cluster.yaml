@@ -30,7 +30,7 @@ spec:
       dataChecksums: true
 
   storage:
-    storageClass: local-path
+    storageClass: moosefs-storage
     size: 20Gi
 
   resources:
