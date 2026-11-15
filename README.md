@@ -20,6 +20,16 @@ Prisma is deployed as a separate Argo CD application in the `prisma` namespace.
 Its frontend and backend are exposed at `prisma.16w.eu` and `napi.16w.eu`,
 respectively, through Traefik with the `crowdsec@file` middleware.
 
+The `website` workload is also deployed in the `prisma` namespace and uses the
+`prisma-db-app` connection Secret. Create `super-website-env` in this namespace
+from the existing `super.env` file before syncing:
+
+```sh
+kubectl create secret generic super-website-env \
+  --namespace prisma \
+  --from-env-file=/mnt/mfs/16W/secrets/super.env
+```
+
 Before syncing, create the `prisma-backend-secrets` Secret with the keys shown
 in [`examples/prisma-backend-secret.yaml`](./examples/prisma-backend-secret.yaml).
 Copy the template outside the repository, fill in the values, and apply that
@@ -42,19 +52,11 @@ used by Adminer; configure a Forward Auth provider and outpost in Authentik.
 
 The `super` stack is deployed in its own namespace. `figaro-db` is a new,
 empty PostgreSQL 17 CNPG cluster; it does not reuse or import the old Compose
-data directory. The web app uses its `16world` database. All persisted data
-uses new MooseFS PVCs rather than the old host mounts.
+data directory. All persisted data uses new MooseFS PVCs rather than the old
+host mounts.
 
-Before syncing, create the `super` namespace, apply a private copy of
-[`examples/super-app-secrets.yaml`](./examples/super-app-secrets.yaml), and
-create `super-website-env` from the existing `super.env` file:
+Before syncing, create the `super` namespace and apply a private copy of
+[`examples/super-app-secrets.yaml`](./examples/super-app-secrets.yaml).
 
-```sh
-kubectl create secret generic super-website-env \
-  --namespace super \
-  --from-env-file=/mnt/mfs/16W/secrets/super.env
-```
-
-CNPG generates the `figaro-db-app` Secret after the database is ready for the
-website. This stack is staged in Argo CD; it does not stop or remove the
-Compose services.
+CNPG generates the `figaro-db-app` Secret after the database is ready. This
+stack is staged in Argo CD; it does not stop or remove the Compose services.

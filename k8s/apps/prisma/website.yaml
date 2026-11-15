@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: website
-  namespace: super
+  namespace: prisma
 spec:
   replicas: 1
   selector:
@@ -28,14 +28,14 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: figaro-db-app
+                  name: prisma-db-app
                   key: uri
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: website
-  namespace: super
+  namespace: prisma
 spec:
   type: ClusterIP
   selector:
@@ -50,7 +50,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: website
-  namespace: super
+  namespace: prisma
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     # traefik.ingress.kubernetes.io/router.middlewares: crowdsec@file
