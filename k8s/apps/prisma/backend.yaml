@@ -39,7 +39,9 @@ spec:
             - name: FRONTEND_ORIGIN
               value: https://prisma.16w.eu
             - name: AUTHENTIK_CLIENT_ID
-              value: u1ju7iU99N0kmQ20ShrCq0ijcwAVAqowHAmZWeOf
+              value: GTnejTfFo9fvScBedbAnQlAglk79ibLXsfUx7665
+            - name: CONF_URL
+              value: https://auth.16w.eu/application/o/prisma/.well-known/openid-configuration
             - name: SESSION_SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -53,8 +55,8 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: prisma-backend-secrets
-                  key: DATABASE_URL
+                  name: prisma-db-app
+                  key: uri
 ---
 apiVersion: v1
 kind: Service

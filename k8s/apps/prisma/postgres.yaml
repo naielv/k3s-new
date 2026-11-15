@@ -1,8 +1,8 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: figaro-db
-  namespace: super
+  name: prisma-db
+  namespace: prisma
   annotations:
     argocd.argoproj.io/sync-wave: "-2"
 spec:

@@ -96,7 +96,7 @@ spec:
     - secretName: couchdb-tls
       hosts:
         - couchdb.16w.eu
-        - couchdb.tech.eus
+        # - couchdb.tech.eus
   rules:
     - host: couchdb.16w.eu
       http:
@@ -108,13 +108,13 @@ spec:
                 name: couchdb
                 port:
                   name: http
-    - host: couchdb.tech.eus
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: couchdb
-                port:
-                  name: http
+    # - host: couchdb.tech.eus
+    #   http:
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: couchdb
+    #             port:
+    #               name: http
