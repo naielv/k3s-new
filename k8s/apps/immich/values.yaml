@@ -47,7 +47,7 @@ immich:
       existingClaim: immich-library
 
 machine-learning:
-  enabled: true
+  enabled: false
 
 server:
   ingress:
