@@ -52,6 +52,15 @@ server:
   controllers:
     main:
       replicas: 3
+      containers:
+        main:
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
       pod:
         topologySpreadConstraints:
           - maxSkew: 1
