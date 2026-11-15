@@ -5,7 +5,7 @@ metadata:
   namespace: prisma
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.middlewares: crowdsec@file
+    # traefik.ingress.kubernetes.io/router.middlewares: crowdsec@file
     cert-manager.io/cluster-issuer: letsencrypt-production
 spec:
   ingressClassName: traefik
