@@ -2,5 +2,40 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "kubernetes": {
+    "managerFilePatterns": [
+      "/^k8s\\/.+\\.ya?ml$/"
+    ]
+  },
+  "helm-values": {
+    "managerFilePatterns": [
+      "/^k8s\\/apps\\/.+\\/values\\.ya?ml$/"
+    ]
+  },
+  "packageRules": [
+    {
+      "description": "Group minor and patch updates for Kubernetes and Helm",
+      "matchManagers": [
+        "kubernetes",
+        "helmv3",
+        "helm-values"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "k8s-helm-non-major"
+    },
+    {
+      "description": "Pin container image digests in Kubernetes manifests",
+      "matchManagers": [
+        "kubernetes"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "pinDigests": true
+    }
   ]
 }

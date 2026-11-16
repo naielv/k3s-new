@@ -9,7 +9,6 @@
 │ go2rtc          │ lekeitio │
 │ home-assistant  │ lekeitio │
 │ homebox         │ lekeitio │
-│ jellyfin        │ zumaia   │
 │ memos           │ getaria  │
 │ mosquitto       │ lekeitio │
 │ music-assistant │ lekeitio │
