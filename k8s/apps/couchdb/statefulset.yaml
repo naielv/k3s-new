@@ -14,10 +14,17 @@ spec:
       labels:
         app.kubernetes.io/name: couchdb
     spec:
+      securityContext:
+        fsGroup: 5984
+        fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: couchdb
           image: apache/couchdb:3.5.3
           imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 5984
+            runAsGroup: 5984
           ports:
             - name: http
               containerPort: 5984
