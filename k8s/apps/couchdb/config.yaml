@@ -8,7 +8,9 @@ data:
     [couchdb]
     single_node = true
 
-    [cors]
+    [chttpd]
     enable_cors = true
+
+    [cors]
     origins = *
     credentials = false
