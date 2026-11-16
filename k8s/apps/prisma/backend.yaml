@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ghcr.io/naielv/prisma-backend:latest
+          image: ghcr.io/naielv/prisma-backend:latest@sha256:bf4e2b58fe78b7473f34c009610a6878756f4f87d792162149242dafa66dac77
           imagePullPolicy: Always
           args:
             - uvicorn

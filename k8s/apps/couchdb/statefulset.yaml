@@ -19,7 +19,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: couchdb
-          image: apache/couchdb:3.5.3
+          image: apache/couchdb:3.5.3@sha256:d6bc2568f38d9f568afdc09cb33b871608db861201d885e34769878049da43f2
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsNonRoot: true
