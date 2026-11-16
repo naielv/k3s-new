@@ -51,16 +51,16 @@ machine-learning:
 server:
   controllers:
     main:
-      replicas: 3
+      replicas: 2
       containers:
         main:
           resources:
             requests:
-              cpu: 250m
-              memory: 512Mi
+              cpu: 500m
+              memory: 2Gi
             limits:
               cpu: "2"
-              memory: 2Gi
+              memory: 4Gi
       pod:
         topologySpreadConstraints:
           - maxSkew: 1
