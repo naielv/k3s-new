@@ -14,7 +14,7 @@ spec:
       helm:
         releaseName: jellyfin
         valueFiles:
-          - $values/apps/jellyfin/values.yaml
+          - $values/k8s/apps/jellyfin/values.yaml
 
     - repoURL: https://github.com/naielv/k3s-new.git
       targetRevision: main
