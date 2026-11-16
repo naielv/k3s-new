@@ -11,8 +11,6 @@ spec:
       app.kubernetes.io/name: couchdb
   template:
     metadata:
-      annotations:
-        checksum/config: 3d35881b12487cc1003b5216d233152face44a580f184577c49ea7f35a6690dc
       labels:
         app.kubernetes.io/name: couchdb
     spec:

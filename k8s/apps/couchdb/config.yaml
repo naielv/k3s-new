@@ -13,4 +13,4 @@ data:
 
     [cors]
     origins = *
-    credentials = false
+    credentials = true
