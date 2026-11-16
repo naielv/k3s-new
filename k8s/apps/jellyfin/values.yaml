@@ -1,0 +1,41 @@
+
+replicaCount: 1
+
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    cert-manager.io/cluster-issuer: letsencrypt-production
+  hosts:
+    - host: jellyfin.16w.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: jellyfin-tls
+      hosts:
+        - jellyfin.16w.eu
+
+service:
+  type: ClusterIP
+  port: 8096
+
+persistence:
+  config:
+    enabled: true
+    type: pvc
+    storageClass: moosefs-storage
+    accessMode: ReadWriteOnce
+    size: 5Gi
+
+  media:
+    enabled: true
+    type: pvc
+    storageClass: moosefs-storage
+    accessMode: ReadWriteOnce
+    size: 500Gi
+    readOnly: false
+
+  cache:
+    enabled: false
