@@ -7,9 +7,9 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/naielv/k8s.git
+    repoURL: https://github.com/naielv/k3s-new.git
     targetRevision: main
-    path: apps/grav
+    path: k8s/apps/grav
 
   destination:
     server: https://kubernetes.default.svc
