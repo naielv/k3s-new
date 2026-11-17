@@ -30,6 +30,13 @@ spec:
                 secretKeyRef:
                   name: prisma-db-app
                   key: uri
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
 ---
 apiVersion: v1
 kind: Service

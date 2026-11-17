@@ -21,6 +21,13 @@ spec:
         - name: couchdb
           image: apache/couchdb:3.5.3@sha256:d6bc2568f38d9f568afdc09cb33b871608db861201d885e34769878049da43f2
           imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
           securityContext:
             runAsNonRoot: true
             runAsUser: 5984
