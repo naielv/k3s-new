@@ -63,3 +63,12 @@ Configure the Authentik provider's redirect URI as
 
 CNPG generates the `figaro-db-app` Secret after the database is ready. This
 stack is staged in Argo CD; it does not stop or remove the Compose services.
+
+## SuperMiso
+
+SuperMiso is built from the public
+[`naielv/SuperMiso`](https://git.16w.eu/naielv/SuperMiso) Hugo repository on
+Forgejo and served at `mini.supermiso.com`. The Argo CD application builds the
+site on sync and then every 15 minutes, publishing each completed build to a
+shared MooseFS volume before Nginx serves it. No credentials are required
+because the repository is public.

@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: supermiso-site
+  namespace: supermiso
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+data:
+  build.sh: |
+    #!/bin/sh
+    set -eu
+
+    SITE_ROOT=/site
+    REPO_URL=https://git.16w.eu/EuskadiTech/SuperMiso.git
+    mkdir -p "$SITE_ROOT"
+    LOCK_DIR="$SITE_ROOT/.build-lock"
+    waited=0
+
+    while ! mkdir "$LOCK_DIR" 2>/dev/null; do
+      if [ -d "$LOCK_DIR" ]; then
+        lock_age=$(($(date +%s) - $(stat -c %Y "$LOCK_DIR")))
+        if [ "$lock_age" -gt 2100 ]; then
+          echo "Removing stale build lock" >&2
+          rm -rf "$LOCK_DIR"
+          continue
+        fi
+      fi
+      if [ "$waited" -ge 1800 ]; then
+        echo "Timed out waiting for another site build" >&2
+        exit 1
+      fi
+      sleep 5
+      waited=$((waited + 5))
+    done
+
+    SOURCE_DIR=
+    BUILD_DIR=
+    cleanup() {
+      [ -z "$SOURCE_DIR" ] || rm -rf "$SOURCE_DIR"
+      [ -z "$BUILD_DIR" ] || rm -rf "$BUILD_DIR"
+      rmdir "$LOCK_DIR"
+    }
+    trap cleanup EXIT
+    trap 'exit 1' HUP INT TERM
+
+    SOURCE_DIR=$(mktemp -d)
+    BUILD_DIR=$(mktemp -d "$SITE_ROOT/.build.XXXXXX")
+    export GIT_TERMINAL_PROMPT=0
+
+    git clone \
+      --depth 1 \
+      --branch main \
+      --recurse-submodules \
+      --shallow-submodules \
+      "$REPO_URL" \
+      "$SOURCE_DIR"
+    hugo --source "$SOURCE_DIR" --destination "$BUILD_DIR" --minify
+    test -s "$BUILD_DIR/index.html"
+
+    mkdir -p "$SITE_ROOT/releases"
+    release_name="$(date -u +%Y%m%d%H%M%S)-$$"
+    mv "$BUILD_DIR" "$SITE_ROOT/releases/$release_name"
+    BUILD_DIR=
+
+    rm -f "$SITE_ROOT/current.next"
+    ln -s "releases/$release_name" "$SITE_ROOT/current.next"
+    mv -Tf "$SITE_ROOT/current.next" "$SITE_ROOT/current"
+
+    releases=$(ls -1 "$SITE_ROOT/releases" | sort -r)
+    count=0
+    for old_release in $releases; do
+      count=$((count + 1))
+      if [ "$count" -gt 2 ]; then
+        rm -rf "$SITE_ROOT/releases/$old_release"
+      fi
+    done
+  nginx.conf: |
+    server {
+      listen 80 default_server;
+      server_name _;
+      root /usr/share/nginx/html/current;
+      index index.html;
+
+      location = /healthz {
+        access_log off;
+        return 200;
+      }
+
+      location / {
+        try_files $uri $uri/ =404;
+      }
+    }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: supermiso-site
+  namespace: supermiso
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: moosefs-storage
+  resources:
+    requests:
+      storage: 1Gi
