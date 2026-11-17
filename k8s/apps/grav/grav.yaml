@@ -81,4 +81,4 @@ spec:
         - name: grav
           port: 80
   tls:
-    certResolver: cloudflare
+    certResolver: letsencrypt-production
