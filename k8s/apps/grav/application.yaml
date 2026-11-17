@@ -1,19 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: supermiso
+  name: grav
   namespace: argocd
 spec:
   project: default
 
   source:
-    repoURL: https://github.com/naielv/k3s-new.git
+    repoURL: https://github.com/naielv/k8s.git
     targetRevision: main
-    path: k8s/apps/supermiso
+    path: apps/grav
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: supermiso
+    namespace: grav
 
   syncPolicy:
     automated:

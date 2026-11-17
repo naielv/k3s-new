@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grav-site
+  namespace: grav
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: moosefs-storage
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grav
+  namespace: grav
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: grav
+  template:
+    metadata:
+      labels:
+        app: grav
+    spec:
+      containers:
+        - name: grav
+          image: getgrav/grav:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: site
+              mountPath: /var/www/html
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      volumes:
+        - name: site
+          persistentVolumeClaim:
+            claimName: grav-site
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grav
+  namespace: grav
+spec:
+  type: ClusterIP
+  selector:
+    app: grav
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: grav
+  namespace: grav
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`tech.eus`) || Host(`supermiso.com`) || Host(`innercys.eu`)
+      kind: Rule
+      services:
+        - name: grav
+          port: 80
+  tls:
+    certResolver: cloudflare
