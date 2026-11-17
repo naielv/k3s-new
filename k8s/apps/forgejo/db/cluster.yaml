@@ -1,0 +1,31 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: forgejo-db
+  namespace: forgejo
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+
+spec:
+  instances: 1
+
+  bootstrap:
+    initdb:
+      database: forgejo
+      owner: forgejo
+      dataChecksums: true
+
+  storage:
+    storageClass: moosefs-storage
+    size: 10Gi
+
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 1Gi
+      cpu: "1"
+
+  monitoring:
+    enablePodMonitor: false

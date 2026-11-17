@@ -1,0 +1,61 @@
+replicaCount: 1
+
+strategy:
+  type: Recreate
+
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    cert-manager.io/cluster-issuer: letsencrypt-production
+  hosts:
+    - host: git.16w.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: forgejo-tls
+      hosts:
+        - git.16w.eu
+
+persistence:
+  enabled: true
+  create: true
+  mount: true
+  storageClass: moosefs-storage
+  size: 50Gi
+  accessModes:
+    - ReadWriteOnce
+
+service:
+  http:
+    type: ClusterIP
+    port: 3000
+  ssh:
+    type: ClusterIP
+    port: 22
+
+gitea:
+  config:
+    server:
+      DOMAIN: git.16w.eu
+      ROOT_URL: https://git.16w.eu/
+      SSH_DOMAIN: git.16w.eu
+
+    service:
+      DISABLE_REGISTRATION: true
+
+    database:
+      DB_TYPE: postgres
+      HOST: forgejo-db-rw:5432
+      NAME: forgejo
+      USER: forgejo
+      SSL_MODE: disable
+
+  additionalConfigFromEnvs:
+    - name: FORGEJO__DATABASE__PASSWD
+      valueFrom:
+        secretKeyRef:
+          name: forgejo-db-app
+          key: password
