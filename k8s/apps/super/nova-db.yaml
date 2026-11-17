@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: pocketbase
-          image: ghcr.io/muchobien/pocketbase:latest@sha256:e72bad07b01cfb172ddef867a5ee98cf68491672f763a2c4622b761d01847635
+          image: ghcr.io/muchobien/pocketbase:latest@sha256:d85edaf7bec244d9460e35b52fd79b2c1c64dc90866f0d6856b03fb04abf195b
           imagePullPolicy: Always
           ports:
             - name: http
