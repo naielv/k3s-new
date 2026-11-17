@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: supermiso-initial-build
+  name: supermiso-initial-build-2
   namespace: supermiso
   annotations:
     argocd.argoproj.io/hook: Sync
