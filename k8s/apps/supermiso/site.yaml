@@ -71,7 +71,7 @@ data:
     export GIT_TERMINAL_PROMPT=0
 
     echo "Cloning website repository..."
-    
+
     git clone \
       --depth 1 \
       --single-branch \
@@ -98,7 +98,7 @@ data:
       echo "ERROR: Hugo did not generate index.html" >&2
       exit 1
     fi
-
+    chmod -R a+rX "$BUILD_DIR"
     echo "Build successful"
 
     release_name="$(date -u +%Y%m%d%H%M%S)-$$"
