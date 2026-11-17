@@ -1,7 +1,8 @@
+
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: supermiso-initial-build-2
+  name: supermiso-initial-build
   namespace: supermiso
   annotations:
     argocd.argoproj.io/hook: Sync
@@ -10,9 +11,12 @@ metadata:
 spec:
   backoffLimit: 1
   activeDeadlineSeconds: 1800
+  ttlSecondsAfterFinished: 3600
   template:
     spec:
       restartPolicy: Never
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 30
       containers:
         - name: build
           image: hugomods/hugo:git-0.165.0@sha256:9e847af1818827bc9f15240e11020c4b93b02a0b430c830ff81b80550abdd59c
@@ -41,6 +45,7 @@ spec:
           configMap:
             name: supermiso-site
             defaultMode: 0555
+
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -52,16 +57,19 @@ metadata:
 spec:
   schedule: "*/15 * * * *"
   concurrencyPolicy: Forbid
-  startingDeadlineSeconds: 120
+  startingDeadlineSeconds: 300
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
       backoffLimit: 1
       activeDeadlineSeconds: 1800
+      ttlSecondsAfterFinished: 3600
       template:
         spec:
           restartPolicy: Never
+          automountServiceAccountToken: false
+          terminationGracePeriodSeconds: 30
           containers:
             - name: build
               image: hugomods/hugo:git-0.165.0@sha256:9e847af1818827bc9f15240e11020c4b93b02a0b430c830ff81b80550abdd59c
@@ -90,6 +98,7 @@ spec:
               configMap:
                 name: supermiso-site
                 defaultMode: 0555
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -100,6 +109,12 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 1
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: supermiso
@@ -108,6 +123,7 @@ spec:
       labels:
         app.kubernetes.io/name: supermiso
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: nginx
           image: nginx:1.29-alpine@sha256:5616878291a2eed594aee8db4dade5878cf7edcb475e59193904b198d9b830de
@@ -116,14 +132,24 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 12
           readinessProbe:
             httpGet:
               path: /
               port: http
+            periodSeconds: 10
+            failureThreshold: 3
           livenessProbe:
             httpGet:
               path: /healthz
               port: http
+            periodSeconds: 20
+            failureThreshold: 3
           resources:
             requests:
               cpu: 25m
@@ -146,6 +172,7 @@ spec:
         - name: scripts
           configMap:
             name: supermiso-site
+
 ---
 apiVersion: v1
 kind: Service
@@ -163,6 +190,7 @@ spec:
       port: 80
       targetPort: http
       protocol: TCP
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

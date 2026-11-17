@@ -18,8 +18,8 @@ data:
     REPO_URL=https://git.16w.eu/EuskadiTech/SuperMiso.git
 
     KEEP_RELEASES=3
-    LOCK_TIMEOUT=1800
-    STALE_LOCK_AGE=3600
+    LOCK_TIMEOUT=2400
+    STALE_LOCK_AGE=2100
 
     SOURCE_DIR=
     BUILD_DIR=
