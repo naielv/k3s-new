@@ -15,7 +15,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: build
-          image: hugomods/hugo:exts-0.147.9@sha256:7b64c37335bb1de7cad636b5fbabf5d37b7651eac71cb6e314fc892cde6073ab
+          image: hugomods/hugo:git-0.165.0@sha256:9e847af1818827bc9f15240e11020c4b93b02a0b430c830ff81b80550abdd59c
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
@@ -64,7 +64,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: build
-              image: hugomods/hugo:exts-0.147.9@sha256:7b64c37335bb1de7cad636b5fbabf5d37b7651eac71cb6e314fc892cde6073ab
+              image: hugomods/hugo:git-0.165.0@sha256:9e847af1818827bc9f15240e11020c4b93b02a0b430c830ff81b80550abdd59c
               imagePullPolicy: IfNotPresent
               command:
                 - /bin/sh

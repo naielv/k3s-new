@@ -67,8 +67,14 @@ stack is staged in Argo CD; it does not stop or remove the Compose services.
 ## SuperMiso
 
 SuperMiso is built from the public
-[`naielv/SuperMiso`](https://git.16w.eu/naielv/SuperMiso) Hugo repository on
-Forgejo and served at `mini.supermiso.com`. The Argo CD application builds the
-site on sync and then every 15 minutes, publishing each completed build to a
-shared MooseFS volume before Nginx serves it. No credentials are required
-because the repository is public.
+[`EuskadiTech/SuperMiso`](https://git.16w.eu/EuskadiTech/SuperMiso) Hugo
+repository on Forgejo and served at `mini.supermiso.com`. The Argo CD
+application builds the site on sync and then every 15 minutes, publishing each
+completed build to a shared MooseFS volume before Nginx serves it. No
+credentials are required because the repository is public.
+
+The Forgejo repository does not include the `themes/PaperMod` submodule, so the
+build clones the commit pinned in the site's `.gitmodules` when the theme is
+missing. Update `THEME_COMMIT` in
+[`k8s/apps/supermiso/site.yaml`](./k8s/apps/supermiso/site.yaml) to move to a
+newer theme revision; it requires Hugo 0.158.0 or newer.
