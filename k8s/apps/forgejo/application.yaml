@@ -13,7 +13,7 @@ spec:
       helm:
         releaseName: forgejo
         valueFiles:
-          - $values/apps/forgejo/values.yaml
+          - $values/k8s/apps/forgejo/values.yaml
 
     - repoURL: https://github.com/naielv/k3s-new.git
       targetRevision: main
