@@ -42,7 +42,15 @@ server:
       cert-manager.io/cluster-issuer: letsencrypt-production
     hosts:
       - auth.16w.eu
+      - auth.tech.eus
+      - auth.supermiso.com
     tls:
       - secretName: authentik-tls
         hosts:
           - auth.16w.eu
+      - secretName: authentik-et-tls
+        hosts:
+          - auth.tech.eus
+      - secretName: authentik-sm-tls
+        hosts:
+          - auth.supermiso.com

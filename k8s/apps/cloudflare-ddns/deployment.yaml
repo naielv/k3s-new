@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflare-ddns
+  namespace: cloudflare-ddns
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: cloudflare-ddns
+  template:
+    metadata:
+      labels:
+        app: cloudflare-ddns
+    spec:
+      containers:
+        - name: cloudflare-ddns
+          image: timothyjmiller/cloudflare-ddns:latest
+          imagePullPolicy: Always
+
+          env:
+            - name: CLOUDFLARE_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare-ddns
+                  key: CF_DNS_API_TOKEN
+
+            - name: DOMAINS
+              value: "tech.eus,16w.eu,innercys.eu,supermiso.com,supermiso.net"
+
+            - name: PROXIED
+              value: "false"
+
+            - name: TTL
+              value: "400"
+
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
