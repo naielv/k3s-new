@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/naielv/prisma-frontend:latest@sha256:00f63d752c4e97dbaa28889d0bbc5faf7689f8baf8663044470a634bbaadffef
+          image: ghcr.io/naielv/prisma-frontend:latest@sha256:abd70c7879505eca5492be607e67a67686052ce2feea80e17ee7ec3a2fb5d412
           imagePullPolicy: Always
           ports:
             - name: http
