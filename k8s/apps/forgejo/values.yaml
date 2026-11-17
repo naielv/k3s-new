@@ -53,6 +53,9 @@ gitea:
       USER: forgejo
       SSL_MODE: disable
 
+    oauth2_client:
+      ENABLE_AUTO_REGISTRATION: true
+
   additionalConfigFromEnvs:
     - name: FORGEJO__DATABASE__PASSWD
       valueFrom:
