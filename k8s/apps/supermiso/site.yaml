@@ -71,19 +71,21 @@ data:
     export GIT_TERMINAL_PROMPT=0
 
     echo "Cloning website repository..."
-
+    
     git clone \
       --depth 1 \
       --single-branch \
       --branch main \
       --recurse-submodules \
-      --shallow-submodules \
       "$REPO_URL" \
       "$SOURCE_DIR"
 
-    echo "Checking Git submodules..."
+    git -C "$SOURCE_DIR" submodule update --init --recursive
 
-    git -C "$SOURCE_DIR" submodule status --recursive
+    test -f "$SOURCE_DIR/themes/PaperMod/theme.toml" || {
+      echo "ERROR: PaperMod submodule was not initialized correctly" >&2
+      exit 1
+    }
 
     echo "Building Hugo website..."
 
