@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: cloudflare-ddns
-          image: timothyjmiller/cloudflare-ddns:latest
+          image: timothyjmiller/cloudflare-ddns:latest@sha256:7e43f85f03b94513d2f05d84ac0f39293e9d339e00b2d64b5cc7bf73e8429d94
           imagePullPolicy: Always
 
           env:

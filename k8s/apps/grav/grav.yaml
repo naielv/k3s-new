@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: grav
-          image: getgrav/grav:latest
+          image: getgrav/grav:latest@sha256:0f3f2341580eb60c7521ec10959512f60a28c4e7b4efa464eb3f7916a775cb3e
           imagePullPolicy: Always
           ports:
             - name: http
