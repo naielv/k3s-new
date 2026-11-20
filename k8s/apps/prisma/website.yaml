@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: website
-          image: ghcr.io/naielv/euskaditech:main@sha256:7e73a35eb6a6e2a52bd17da27e7f9b18916e1559ebcface53a055af5c0cc4290
+          image: ghcr.io/naielv/euskaditech:main@sha256:2064cde16b3c5c3ccb9e3ddf30f7ff326c40208066b24e94d5192c5b96b26525
           imagePullPolicy: Always
           ports:
             - name: http
