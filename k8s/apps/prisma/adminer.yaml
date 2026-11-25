@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: adminer
-          image: adminer:latest@sha256:7605e298e5a2ac74d806283362fa253a4e0a42cfd881e8fa2c155f0631899f6c
+          image: adminer:latest@sha256:cb8e97bff72b58e911743a0609075446bc0881fb7eca79137d8bc73736840a2b
           imagePullPolicy: Always
           ports:
             - name: http
